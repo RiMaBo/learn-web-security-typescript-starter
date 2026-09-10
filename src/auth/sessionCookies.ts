@@ -15,7 +15,11 @@ export function setSessionCookie(
   response: Response,
   session: CookieSession,
 ): void {
+  sessionCookieOptions.expires = new Date(session.expires_at);
   response.cookie(SESSION_COOKIE_NAME, session.token, sessionCookieOptions);
+
+  // Boot.dev solution
+  // response.cookie(SESSION_COOKIE_NAME, session.token, { ...sessionCookieOptions, expires: new Date(session.expires_at) });
 }
 
 export function clearSessionCookie(response: Response): void {
