@@ -43,6 +43,7 @@ import {
   renderTotpEnabledPage,
   renderTotpSetupPage,
 } from "../views/account.ts";
+import { verifyPassword } from "../auth/passwords.ts";
 
 export function createAccountRouter(deps: Dependencies): Router {
   const { db, keyring } = deps;
@@ -166,7 +167,7 @@ export function createAccountRouter(deps: Dependencies): Router {
       );
       return;
     }
-    const currentPassword = String(req.body.currentPassword ?? "");
+    const currentPassword = verifyPassword(String(req.body.currentPassword ?? ""), current.user.password_hash);
     if (!currentPassword) {
       res
         .status(403)
