@@ -190,8 +190,21 @@ export function discardExtractedTaxDocumentArchive(
 }
 
 function isInsideDirectory(
-  _directory: string,
-  _candidatePath: string,
+  directory: string,
+  candidatePath: string,
 ): boolean {
+  const root = resolve(extractionDirectory, directory);
+  const destination = resolve(root, candidatePath);
+  const relativePath = relative(root, destination);
+
+  if (
+    relativePath === "" ||
+    relativePath === ".." ||
+    relativePath.startsWith(`..${sep}`) ||
+    isAbsolute(relativePath)
+  ) {
+    throw new Error("Archive entry escapes the extraction directory");
+  }
+
   return true;
 }
